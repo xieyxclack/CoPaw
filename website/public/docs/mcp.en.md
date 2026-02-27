@@ -4,6 +4,20 @@
 
 ---
 
+## Prerequisites
+
+If using `npx` to run MCP servers, ensure you have:
+
+- **Node.js** version 18 or higher ([download](https://nodejs.org/))
+
+Check your Node.js version:
+
+```bash
+node --version
+```
+
+---
+
 ## Adding MCP clients in the Console
 
 1. Open the Console and go to **Agent → MCP**
