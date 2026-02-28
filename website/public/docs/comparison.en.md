@@ -1,4 +1,4 @@
-# CoPaw vs OpenClaw Comparison
+# CoPaw vs OpenClaw: Feature Comparison
 
 | Category | Dimension | OpenClaw | CoPaw |
 | :--- | :--- | :--- | :--- |

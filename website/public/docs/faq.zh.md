@@ -4,7 +4,7 @@
 
 ---
 
-### CoPaw 和 OpenClaw 对比
+### CoPaw 与 OpenClaw 的功能对比
 
 请查看 [对比](/docs/comparison) 页面了解详细的功能对比。
 

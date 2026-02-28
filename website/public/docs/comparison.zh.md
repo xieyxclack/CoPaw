@@ -1,4 +1,4 @@
-# CoPaw 和 OpenClaw 对比
+# CoPaw 与 OpenClaw 的功能对比
 
 | 分类 | 维度 | OpenClaw | CoPaw |
 | :--- | :--- | :--- | :--- |

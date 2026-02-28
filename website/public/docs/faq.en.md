@@ -5,7 +5,7 @@ Click a question to expand the answer.
 
 ---
 
-### CoPaw vs OpenClaw Comparison
+### CoPaw vs OpenClaw: Feature Comparison
 
 Please check the [Comparison](/docs/comparison) page for detailed feature comparison.
 
