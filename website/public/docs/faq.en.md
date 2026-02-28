@@ -9,7 +9,6 @@ Click a question to expand the answer.
 
 Please check the [Comparison](/docs/comparison) page for detailed feature comparison.
 
-
 ### How to install CoPaw
 
 CoPaw supports multiple installation methods. See
