@@ -182,10 +182,13 @@ const DOC_SLUGS: DocEntry[] = [
 ];
 
 /** Collect all valid slugs (parents + children). */
-const ALL_SLUGS = DOC_SLUGS.flatMap((d) => [
-  d.slug,
-  ...(d.children?.map((c) => c.slug) ?? []),
-]);
+const ALL_SLUGS = [
+  ...DOC_SLUGS.flatMap((d) => [
+    d.slug,
+    ...(d.children?.map((c) => c.slug) ?? []),
+  ]),
+  "comparison", // Hidden page, accessible only via FAQ link
+];
 
 const DOC_TITLES: Record<Lang, Record<string, string>> = {
   zh: {
