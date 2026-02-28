@@ -16,6 +16,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
 import {
   BookOpen,
   Menu,
@@ -495,7 +496,7 @@ export function Docs({ config, lang, onLangClick }: DocsProps) {
                       {faqData.intro ? (
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
-                          rehypePlugins={[rehypeHighlight]}
+                          rehypePlugins={[rehypeRaw, rehypeHighlight]}
                         >
                           {faqData.intro}
                         </ReactMarkdown>
@@ -562,7 +563,7 @@ export function Docs({ config, lang, onLangClick }: DocsProps) {
                                 >
                                   <ReactMarkdown
                                     remarkPlugins={[remarkGfm]}
-                                    rehypePlugins={[rehypeHighlight]}
+                                    rehypePlugins={[rehypeRaw, rehypeHighlight]}
                                   >
                                     {item.answer}
                                   </ReactMarkdown>
@@ -577,7 +578,7 @@ export function Docs({ config, lang, onLangClick }: DocsProps) {
                     <LangContext.Provider value={lang}>
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeHighlight]}
+                        rehypePlugins={[rehypeRaw, rehypeHighlight]}
                         components={{
                           pre: ({ children, ...props }) => {
                             const langCtx = useContext(LangContext);

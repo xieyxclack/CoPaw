@@ -7,7 +7,7 @@ Click a question to expand the answer.
 
 ### CoPaw vs OpenClaw Comparison
 
-Please check the [Comparison](./comparison.md) page for detailed feature comparison.
+Please check the [Comparison](/docs/comparison) page for detailed feature comparison.
 
 
 ### How to install CoPaw

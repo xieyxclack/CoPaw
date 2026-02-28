@@ -6,7 +6,7 @@
 
 ### CoPaw 和 OpenClaw 对比
 
-请查看 [对比](./comparison.md) 页面了解详细的功能对比。
+请查看 [对比](/docs/comparison) 页面了解详细的功能对比。
 
 
 ### CoPaw如何安装
