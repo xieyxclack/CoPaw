@@ -79,7 +79,7 @@ class CoPawAgent(ReActAgent):
         memory_manager: MemoryManager | None = None,
         max_iters: int = 50,
         max_input_length: int = 128 * 1024,  # 128K = 131072 tokens
-        namesake_strategy: NamesakeStrategy = "rename",
+        namesake_strategy: NamesakeStrategy = "skip",
     ):
         """Initialize CoPawAgent.
 
@@ -96,7 +96,7 @@ class CoPawAgent(ReActAgent):
                 context window (default: 128K = 131072)
             namesake_strategy: Strategy to handle namesake tool functions.
                 Options: "override", "skip", "raise", "rename"
-                (default: "rename")
+                (default: "skip")
         """
         self._env_context = env_context
         self._max_input_length = max_input_length
@@ -152,14 +152,14 @@ class CoPawAgent(ReActAgent):
 
     def _create_toolkit(
         self,
-        namesake_strategy: NamesakeStrategy = "rename",
+        namesake_strategy: NamesakeStrategy = "skip",
     ) -> Toolkit:
         """Create and populate toolkit with built-in tools.
 
         Args:
             namesake_strategy: Strategy to handle namesake tool functions.
                 Options: "override", "skip", "raise", "rename"
-                (default: "rename")
+                (default: "skip")
 
         Returns:
             Configured toolkit instance
@@ -318,14 +318,14 @@ class CoPawAgent(ReActAgent):
 
     async def register_mcp_clients(
         self,
-        namesake_strategy: NamesakeStrategy = "rename",
+        namesake_strategy: NamesakeStrategy = "skip",
     ) -> None:
         """Register MCP clients on this agent's toolkit after construction.
 
         Args:
             namesake_strategy: Strategy to handle namesake tool functions.
                 Options: "override", "skip", "raise", "rename"
-                (default: "rename")
+                (default: "skip")
         """
         for client in self._mcp_clients:
             await self.toolkit.register_mcp_client(
