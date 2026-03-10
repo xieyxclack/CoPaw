@@ -4,7 +4,7 @@
 Transparently retries LLM API calls on transient errors (rate-limit,
 timeout, connection) with configurable exponential back-off.
 
-Configuration via environment variables:
+Configuration via environment variables (or use defaults from constant.py):
     COPAW_LLM_MAX_RETRIES   – max retry attempts (default 3)
     COPAW_LLM_BACKOFF_BASE  – base delay in seconds (default 1.0)
     COPAW_LLM_BACKOFF_CAP   – max delay cap in seconds (default 10.0)
@@ -14,11 +14,12 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import os
 from typing import Any, AsyncGenerator
 
 from agentscope.model import ChatModelBase
 from agentscope.model._model_response import ChatResponse
+
+from ..constant import LLM_BACKOFF_BASE, LLM_BACKOFF_CAP, LLM_MAX_RETRIES
 
 logger = logging.getLogger(__name__)
 
@@ -73,33 +74,9 @@ def _is_retryable(exc: Exception) -> bool:
     return False
 
 
-def _max_retries() -> int:
-    raw = os.environ.get("COPAW_LLM_MAX_RETRIES", "3")
-    try:
-        return max(0, int(raw))
-    except Exception:
-        return 3
-
-
-def _backoff_base() -> float:
-    raw = os.environ.get("COPAW_LLM_BACKOFF_BASE", "1.0")
-    try:
-        return max(0.1, float(raw))
-    except Exception:
-        return 1.0
-
-
-def _backoff_cap() -> float:
-    raw = os.environ.get("COPAW_LLM_BACKOFF_CAP", "10.0")
-    try:
-        return max(0.5, float(raw))
-    except Exception:
-        return 10.0
-
-
 def _compute_backoff(attempt: int) -> float:
     """Exponential back-off: base * 2^(attempt-1), capped."""
-    return min(_backoff_cap(), _backoff_base() * (2 ** max(0, attempt - 1)))
+    return min(LLM_BACKOFF_CAP, LLM_BACKOFF_BASE * (2 ** max(0, attempt - 1)))
 
 
 class RetryChatModel(ChatModelBase):
@@ -126,7 +103,7 @@ class RetryChatModel(ChatModelBase):
         *args: Any,
         **kwargs: Any,
     ) -> ChatResponse | AsyncGenerator[ChatResponse, None]:
-        retries = _max_retries()
+        retries = LLM_MAX_RETRIES
         attempts = retries + 1
         last_exc: Exception | None = None
 
