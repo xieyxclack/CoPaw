@@ -149,49 +149,55 @@ class RetryChatModel(ChatModelBase):
     ) -> AsyncGenerator[ChatResponse, None]:
         """Yield chunks from *stream*; on transient failure, retry the
         full request and yield from the new stream instead."""
+        failed_exc: Exception | None = None
         try:
             async for chunk in stream:
                 yield chunk
         except Exception as exc:
+            failed_exc = exc
+        finally:
             await stream.aclose()
-            if not _is_retryable(exc) or current_attempt >= max_attempts:
-                raise
-            delay = _compute_backoff(current_attempt)
-            logger.warning(
-                "LLM stream failed (attempt %d/%d): %s. "
-                "Retrying in %.1fs …",
-                current_attempt,
-                max_attempts,
-                exc,
-                delay,
-            )
-            await asyncio.sleep(delay)
 
-            new_stream: AsyncGenerator | None = None
-            for attempt in range(current_attempt + 1, max_attempts + 1):
-                try:
-                    result = await self._inner(*call_args, **call_kwargs)
-                    if isinstance(result, AsyncGenerator):
-                        new_stream = result
-                        async for chunk in new_stream:
-                            yield chunk
-                        new_stream = None
-                    else:
-                        yield result
-                    return
-                except Exception as retry_exc:
-                    if new_stream is not None:
-                        await new_stream.aclose()
-                        new_stream = None
-                    if not _is_retryable(retry_exc) or attempt >= max_attempts:
-                        raise
-                    retry_delay = _compute_backoff(attempt)
-                    logger.warning(
-                        "LLM stream retry failed (attempt %d/%d): %s. "
-                        "Retrying in %.1fs …",
-                        attempt,
-                        max_attempts,
-                        retry_exc,
-                        retry_delay,
-                    )
-                    await asyncio.sleep(retry_delay)
+        if failed_exc is None:
+            return
+
+        if not _is_retryable(failed_exc) or current_attempt >= max_attempts:
+            raise failed_exc
+        delay = _compute_backoff(current_attempt)
+        logger.warning(
+            "LLM stream failed (attempt %d/%d): %s. Retrying in %.1fs …",
+            current_attempt,
+            max_attempts,
+            failed_exc,
+            delay,
+        )
+        await asyncio.sleep(delay)
+
+        new_stream: AsyncGenerator | None = None
+        for attempt in range(current_attempt + 1, max_attempts + 1):
+            try:
+                result = await self._inner(*call_args, **call_kwargs)
+                if isinstance(result, AsyncGenerator):
+                    new_stream = result
+                    async for chunk in new_stream:
+                        yield chunk
+                    new_stream = None
+                else:
+                    yield result
+                return
+            except Exception as retry_exc:
+                if new_stream is not None:
+                    await new_stream.aclose()
+                    new_stream = None
+                if not _is_retryable(retry_exc) or attempt >= max_attempts:
+                    raise
+                retry_delay = _compute_backoff(attempt)
+                logger.warning(
+                    "LLM stream retry failed (attempt %d/%d): %s. "
+                    "Retrying in %.1fs …",
+                    attempt,
+                    max_attempts,
+                    retry_exc,
+                    retry_delay,
+                )
+                await asyncio.sleep(retry_delay)
