@@ -138,9 +138,6 @@ async def execute_shell_command(
     <stderr></stderr> tags.
 
     IMPORTANT: Always consider the operating system before choosing commands.
-    Use OS-appropriate commands (e.g. `brew` on macOS, `apt` on Debian/Ubuntu,
-    `dir` on Windows instead of `ls`). Check the environment context for the
-    current OS if unsure.
 
     Args:
         command (`str`):
